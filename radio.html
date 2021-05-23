@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <script src="
+https://cdn.staticfile.org/vue/2.5.3/vue.min.js">
+</script>
+</head>
+
+<body>
+  <div id="myID">
+    Please click the radio:
+    <comp v-model="value"></comp>
+    <br><br>
+    <div v-show="value">
+      Hello, I am here!
+    </div>
+  </div>
+  <script>
+    Vue.component('comp', {
+      model: { event: 'click' },
+      props: ['value'],
+      template: `<input type="radio" v-on:click="$emit('click', $event.target.value)">`
+    })
+    new Vue({
+      el: '#myID',
+      data: {
+        value: false
+      }
+    })
+  </script>
+</body>
+
+</html>
