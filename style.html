@@ -9,20 +9,28 @@ https://cdn.staticfile.org/vue/2.5.3/vue.min.js">
 </head>
 
 <body>
+  <style>
+    .myClass {
+      color: blue;
+      font-size: 18pt;
+      font-family: arial black;
+    }
+  </style>
   <div id="myID">
-    <div v-bind:style="styleObject">Good!</div>
+    Please check the box:
+    <input type="checkbox" v-model="bool">
+    <br><br>
+    <div v-bind:class="{'myClass': bool}">
+      TypeScript in 8 Hours!
+    </div>
   </div>
   <script>
     new Vue({
       el: '#myID',
       data: {
-        styleObject: {
-          color: 'blue',
-          fontStyle: 'italic',
-          fontFamily: 'arial black'
-        }
+        bool: false
       }
-    })
+    });
   </script>
 
 </html>
