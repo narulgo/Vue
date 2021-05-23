@@ -1,39 +1,33 @@
 
-members = [
-    {
-        fname: 'John',
-        lname: 'Lennon',
-        instrument: 'Acoustic Guitar'
-    },
-    {
-        fname: 'George',
-        lname: 'Harrison',
-        instrument: 'Electric Guitar'
-    }
-]
-
-const handlingForms = {
-
+const todosApp = {
     data() {
         return {
-            members: window.members,
-            newMember: {
-
+            todos: [],
+            newTodo: {
+                done: false
             }
         }
     },
-
     methods: {
-        addMember: function() {
-            if (!(this.newMember.instrument && this.newMember.fname && this.newMember.lname)) {
-                alert("All fields must be filled")
+        addTodo: function() {
+            if (this.newTodo.text) {
+                this.todos.push(this.newTodo);
+                this.newTodo = {
+                    done: false
+                };
+                localStorage.setItem("todos", JSON.stringify(this.todos));
             } else {
-                this.members.push(this.newMember);
-                this.newMember = {};
+                alert("To-do text is required");
             }
         }
+    },
+    created() {
+        this.todos = localStorage.getItem("todos") ? JSON.parse(localStorage.getItem("todos")) : this.todos;
+    },
+    updated() {
+        localStorage.setItem("todos", JSON.stringify(this.todos));
     }
 
-};
+}
 
-Vue.createApp(handlingForms).mount('#app');
+Vue.createApp(todosApp).mount('#app');
