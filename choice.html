@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <script src="
+https://cdn.staticfile.org/vue/2.5.3/vue.min.js">
+</script>
+</head>
+
+<body>
+  <div id="myID">
+    <p>Select a Favorite Language:</p>
+    <select v-model="choice">
+      <option value="Kotlin">Kotlin</option>
+      <option value="Django">Django</option>
+      <option value="JQuery">JQuery</option>
+    </select>
+    <br><br>
+    <div>
+      Your favorite language is: {{ choice }}
+    </div>
+  </div>
+  <script>
+    new Vue({
+      el: '#myID',
+      data: { choice: ' ', }
+    })
+  </script>
+
+</html>
