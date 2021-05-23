@@ -9,15 +9,15 @@ https://cdn.staticfile.org/vue/2.5.3/vue.min.js">
 </head>
 
 <body>
-  <div id="myID">Input your name, and press Enter. <br><br>
-    <input v-on:keyup.enter="myFun">
+  <div id="myID">Please enter & delete your information! <br><br>
+    <input v-on:keyup.delete="myFun">
   </div>
   <script>
     new Vue({
       el: '#myID',
       methods: {
         myFun: function () {
-          document.write('Login successfuly!')
+          document.write('Delete successfully!')
         }
       }
     })
