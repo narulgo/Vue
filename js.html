@@ -10,15 +10,15 @@ https://cdn.staticfile.org/vue/2.5.3/vue.min.js">
 
 <body>
   <div id="myID">
-    <input type="checkbox" v-on:change="call">
+    {{ test ? 'Apple' : 'Banana' }}
+    {{ str.length }}
   </div>
   <script>
     new Vue({
-      el: "#myID",
-      methods: {
-        call: function () {
-          document.write("Hello, My Friends!");
-        }
+      el: '#myID',
+      data: {
+        test: true,
+        str: 'Perl in 8 Hours',
       }
     })
   </script>
