@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <script src="
+https://cdn.staticfile.org/vue/2.5.3/vue.min.js">
+</script>
+</head>
+
+<body>
+  <div id="myID">
+    <button v-on:click="call">click me</button>
+  </div>
+  <script>
+    new Vue({
+      el: "#myID",
+      methods: {
+        call: function () {
+          document.write("Hello, My Friends!");
+        }
+      }
+    })
+  </script>
+
+</html>
