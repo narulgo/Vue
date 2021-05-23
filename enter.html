@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <script src="
+https://cdn.staticfile.org/vue/2.5.3/vue.min.js">
+</script>
+</head>
+
+<body>
+  <div id="myID">Input your name, and press Enter. <br><br>
+    <input v-on:keyup.enter="myFun">
+  </div>
+  <script>
+    new Vue({
+      el: '#myID',
+      methods: {
+        myFun: function () {
+          document.write('Login successfuly!')
+        }
+      }
+    })
+  </script>
+
+</html>
