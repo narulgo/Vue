@@ -1,0 +1,60 @@
+<html>
+
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+  <div id="root"></div>
+</body>
+<script>
+  Vue.component("Timer", {
+    data() {
+      return {
+        min: this.minutes,
+        sec: this.seconds
+      }
+    },
+    props: [
+      "minutes",
+      "seconds"
+    ],
+    computed: {
+      time() {
+        var min = this.min;
+        var sec = this.sec;
+        if (min < 10) min = "0" + min;
+        if (sec < 10) sec = "0" + sec;
+        return min + ":" + sec;
+      }
+    },
+    created() {
+      var timer = setInterval(() => {
+        this.sec -= 1;
+        if (this.sec < 0) {
+          this.min -= 1;
+          if (this.min < 0) {
+            this.min = 0;
+            this.sec = 0;
+            clearInterval(timer);
+          }
+          else this.sec = 59;
+        }
+      }, 1000);
+    },
+    template: `
+<div>
+<div v-if="sec||min"> Remaining time {{time}} </div>
+<div v-else>End of timer</div>
+</div>
+`
+  });
+  var vm = new Vue({
+    el: "#root",
+    template: `
+<div>
+<Timer minutes="0" seconds="5" />
+</div>
+`
+  });
+</script>
