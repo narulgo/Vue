@@ -16,6 +16,7 @@
       }
     },
     props: [
+      "timername",
       "minutes",
       "seconds"
     ],
@@ -28,33 +29,163 @@
         return min + ":" + sec;
       }
     },
-    created() {
-      var timer = setInterval(() => {
-        this.sec -= 1;
-        if (this.sec < 0) {
-          this.min -= 1;
-          if (this.min < 0) {
-            this.min = 0;
-            this.sec = 0;
-            clearInterval(timer);
-          }
-          else this.sec = 59;
+    mounted() {
+      var timer;
+      this.$on("startstop", function (stop) {
+        if (stop) {
+          if (timer) clearInterval(timer);
         }
-      }, 1000);
+        else {
+          timer = setInterval(() => {
+            this.sec -= 1;
+            if (this.sec < 0) {
+              this.min -= 1;
+              if (this.min < 0) {
+                this.min = this.minutes;
+                this.sec = this.seconds;
+                if (this.$children.length) this.$children[0].start_stop();
+                else this.$emit("startstop", 0);
+                clearInterval(timer);
+              }
+              else this.sec = 59;
+            }
+          }, 1000);
+        }
+        console.log(this.timername + " " + (stop ? "stopped" : "in progress"));
+        this.$parent.$emit("startstop", stop);
+      });
+      if (!this.$children.length) this.$emit("startstop", 0);
     },
     template: `
 <div>
-<div v-if="sec||min"> Remaining time {{time}} </div>
-<div v-else>End of timer</div>
+<b>{{timername}}</b> :
+<span v-if="sec||min"> {{time}} </span>
+<span v-else>End timer</span>
+<slot v-bind:timername="timername"></slot>
+</div>
+`
+  });
+  Vue.component("StartStop", {
+    data() {
+      return {
+        stopped: parseInt(this.stop)
+      }
+    },
+    props: [
+      "timername",
+      "stop"
+    ],
+    created() {
+      if (!this.stopped) {
+        this.stopped = !this.stopped;
+        this.start_stop();
+      }
+    },
+    methods: {
+      start_stop() {
+        this.$nextTick(function () {
+          this.stopped = !this.stopped;
+          this.$parent.$emit("startstop", this.stopped);
+        });
+      }
+    },
+    template: `
+<div>
+<button v-if="stopped" v-on:click="start_stop">
+Start {{timername}}
+</button>
+<button v-else v-on:click="start_stop">
+Stop {{timername}}
+</button>
+</div>
+`
+  });
+  Vue.component("TimerStartStop", {
+    props: [
+      "timername",
+      "minutes",
+      "seconds"
+    ],
+    template: `
+<Timer v-bind:timername="timername"
+v-bind:minutes="minutes"
+v-bind:seconds="seconds">
+<StartStop v-bind:timername="timername" v-bind:stop="0" />
+</Timer>
+`
+  });
+  Vue.component("TimerStartCount", {
+    props: [
+      "timername",
+      "minutes",
+      "seconds"
+    ],
+    data() {
+      return {
+        count: 0
+      }
+    },
+    methods: {
+      startstop(stop) {
+        if (!stop) this.count++;
+        this.$parent.$emit("startstop", stop);
+      }
+    },
+    template: `
+<div>
+<Timer v-bind:timername="timername"
+v-bind:minutes="minutes"
+v-bind:seconds="seconds" v-on:startstop="startstop">
+<StartStop v-bind:timername="timername" v-bind:stop="1" />
+</Timer>
+<br>
+<b>Starts {{timername}}</b> : {{count}}
+</div>
+`
+  });
+  Vue.component("TimerStartCounts", {
+    data() {
+      return {
+        count: 0
+      }
+    },
+    created() {
+      this.$on("startstop", function (stop) {
+        if (!stop) this.count++;
+      });
+    },
+    template: `
+<div>
+<slot></slot>
+<hr><br>
+<b>Starts global</b> : {{count}}
 </div>
 `
   });
   var vm = new Vue({
     el: "#root",
+    data() {
+      return {
+        count: 0
+      }
+    },
+    methods: {
+      startstop(stop) {
+        if (!stop) this.count++;
+      }
+    },
     template: `
 <div>
-<Timer minutes="0" seconds="5" />
+<TimerStartCounts>
+<TimerStartCount timername="Timer 4" minutes="1"
+seconds="15" />
+<hr><br>
+<TimerStartCount timername="Timer 5" minutes="0" seconds="5"
+/>
+</TimerStartCounts>
 </div>
 `
   });
 </script>
+
+</html>
