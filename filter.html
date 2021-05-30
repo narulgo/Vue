@@ -1,0 +1,50 @@
+<html>
+
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+  <div id="root"></div>
+</body>
+<script>
+  Vue.filter("upper", function (value, index) {
+    var result = "";
+    if (index == undefined) return value.toUpperCase();
+    for (i = 0; i < value.length; i++) {
+      var letter = value.charAt(i);
+      if (i == index) letter = letter.toUpperCase();
+      result += letter;
+    }
+    return result;
+  });
+  Vue.filter("nospaces", function (value) {
+    return value.replace(/ /g, "");
+  });
+  Vue.component("App", {
+    data() {
+      return {
+        text2: this.text
+      }
+    },
+    props: [
+      "text"
+    ],
+    template: `
+<div>
+<p>All in UPPERCASES : {{text2|upper|nospaces}}</p>
+<p>[5] in UPPERCASE : {{text2|upper(5)|nospaces}}</p>
+</div>
+`
+  });
+  var vm = new Vue({
+    el: "#root",
+    template: `
+<div>
+<App text="Paragraph 1" />
+</div>
+`
+  });
+</script>
+
+</html>
