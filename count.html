@@ -1,0 +1,61 @@
+<html>
+
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+  <div id="root"></div>
+</body>
+<script>
+  Vue.component("App", {
+    data() {
+      return {
+        count: 0
+      }
+    },
+    beforeCreate() {
+      console.log("beforeCreate");
+    },
+    created() {
+      console.log("created");
+      setInterval(() => {
+        this.count++;
+        if (this.count == 3) this.$destroy();
+      }, 1000);
+    },
+    beforeMount() {
+      console.log("beforeMount");
+    },
+    mounted() {
+      console.log("mounted");
+    },
+    beforeUpdate() {
+      console.log("beforeUpdate");
+    },
+    updated() {
+      console.log("updated");
+    },
+    beforeDestroy() {
+      console.log("beforeDestroy");
+    },
+    destroyed() {
+      console.log("destroyed");
+    },
+    template: `
+<div>
+App component: {{count}}
+</div>
+`
+  });
+  var vm = new Vue({
+    el: "#root",
+    template: `
+<div>
+<App />
+</div>
+`
+  });
+</script>
+
+</html>
