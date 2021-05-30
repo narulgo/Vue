@@ -1,0 +1,172 @@
+<html>
+
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+  <div id="root"></div>
+</body>
+<script>
+  Vue.component("App", {
+    props: [
+      "elements"
+    ],
+    methods: {
+      add() {
+        eventBus.$emit("add");
+      },
+      click() {
+        if (menu) {
+          menu.$destroy();
+          menu.$el.parentElement.removeChild(menu.$el);
+          menu = null;
+        }
+      }
+    },
+    template: `
+<div style="position:relative; height:100%;" v-on:click="click">
+<button v-on:click="add">Add Element</button>
+<Elements v-bind:elements="elements" />
+</div>
+`
+  });
+  Vue.component("Elements", {
+    props: [
+      "elements"
+    ],
+    data() {
+      return {
+      }
+    },
+    template: `
+<ul v-if="elements.length">
+<Element v-for="(element, index) in elements" style="margintop:
+10px;"
+v-bind:key="index"
+v-bind:index="index"
+v-bind:text="element.text">
+</Element>
+</ul>
+<div v-else><br>Empty List</div>
+`
+  });
+  var menu;
+  Vue.component("Element", {
+    props: [
+      "text",
+      "index"
+    ],
+    data() {
+      return {
+        modifyOn: false
+      }
+    },
+    updated() {
+      if (this.$refs.input) this.$refs.input.focus();
+    },
+    methods: {
+      remove() {
+        eventBus.$emit("remove", this.index);
+      },
+      modify(event) {
+        this.modifyOn = false;
+        var newText = event.target.value;
+        eventBus.$emit("modify", this.index, newText);
+      },
+      displayCtxMenu(event) {
+        var x = event.clientX;
+        var y = event.clientY;
+        if (menu) {
+          menu.$destroy();
+          menu.$el.parentElement.removeChild(menu.$el);
+        }
+        menu = new ContextMenu({
+          propsData: {
+            x: x,
+            y: y
+          }
+        }).$mount();
+        this.$el.appendChild(menu.$el);
+      }
+    },
+    template: `
+<li style="margin-top:10px;">
+<input v-if="modifyOn" type="text"
+v-on:keydown.enter="modify"
+v-on:blur="modify"
+v-bind:value="text"
+ref="input">
+<div v-else>
+<span v-on:dblclick="modifyOn=true"
+v-on:click.stop="displayCtxMenu" style="cursor:pointer;">
+{{text}}
+</span>
+<button style="margin-left:10px; font-size:11px;"
+v-on:click="remove">
+Remove
+</button>
+</div>
+</li>
+`
+  });
+  var ContextMenu = Vue.component("ContextMenu", {
+    props: [
+      "x",
+      "y"
+    ],
+    data() {
+      return {
+      }
+    },
+    methods: {
+      modify() {
+        console.log("Modify");
+      },
+      remove() {
+        console.log("Remove");
+      }
+    },
+    template: `
+<div v-bind:style="{position:'absolute', top:y + 'px', left:x + 'px',
+backgroundColor:'gainsboro'}">
+<ul style="margin-left:0px; padding:5px; list-style-type:none;
+cursor:pointer;">
+<li v-on:click="modify">Modify</li>
+<li v-on:click="remove">Remove</li>
+</ul>
+</div>
+`
+  });
+  var vm = new Vue({
+    el: "#root",
+    data: {
+      elements: [
+        { text: "Element 1" },
+        { text: "Element 2" },
+        { text: "Element 3" },
+        { text: "Element 4" },
+        { text: "Element 5" }
+      ]
+    },
+    template: `
+<App v-bind:elements="elements" />
+`
+  });
+  var eventBus = new Vue();
+  eventBus.$on("remove", function (index) {
+    vm.elements = vm.elements.filter(function (element, i) {
+      if (i == index) return false;
+      else return true;
+    });
+  });
+  eventBus.$on("modify", function (index, value) {
+    vm.elements[index].text = value;
+  });
+  eventBus.$on("add", function () {
+    var text = "Element " + (vm.elements.length + 1);
+    vm.elements.push({ text });
+  });
+</script>
+
+</html>
