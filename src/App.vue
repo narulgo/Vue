@@ -1,97 +1,51 @@
 <template>
-  <div id="app">
-    <div v-if="$route.path !== '/login'" class="navigation-buttons">
-      <button @click="logout" class="button is-text is-pulled-left">Logout</button>
-      <div class="is-pulled-right">
-        <router-link to="/products" class="button">
-          <i class="fa fa-user-circle"></i><span>Shop</span>
-        </router-link>
-        <router-link to="/cart" class="button is-primary">
-          <i class="fa fa-shopping-cart"></i><span>{{ cartQuantity }}</span>
-        </router-link>
-      </div>
-    </div>
-    <div class="container">
-      <div class="columns">
-        <div class="column is-6 column--align-center">
-          <router-view></router-view>
-        </div>
-      </div>
-    </div>
-  </div>
+   <div>
+      <div>Country : <input type="text" v-on:keyup.enter="valid"> </div>
+      <br>
+      <div>Country : <span>{{name}}</span> </div>
+      <div>Region : <span>{{region}}</span> </div>
+      <div>Flag : <span>{{flag}}</span> </div>
+      <br>
+      <div v-if="!data.name && country"> No country found with this name</div>
+      <div style= "text-align:center"><img v-bind:src="flag" height="100" /></div>
+   </div>
 </template>
-
 <script>
-import { mapGetters } from 'vuex';
-
+import axios from "axios";
 export default {
-  name: 'App',
-  computed: {
-    ...mapGetters([
-      'token',
-      'cartQuantity'
-    ])
-  },
-  created() {
-    const token = localStorage.getItem("token");
-    if (token) {
-      this.updateInitialState(token);
+  data() {
+    return {
+      data : {},
+      country : ""
     }
   },
-  watch: {
-    token() {
-      if (this.token) {
-        this.updateInitialState(this.token);
-      }
-    }
-  },
-  methods: {
-    logout() {
-      this.$store.dispatch("logout").then(() => {
-       this.$router.push("/login")
-      });
+  computed : {
+    name() {
+      return this.data.name;
     },
-    updateInitialState(token) {
-      this.$store.dispatch('getCartItems', token);
-      this.$store.dispatch('getProductItems', token);
+    flag() {
+      return this.data.flag;
+    },
+    region() {
+      return this.data.region;
     }
-  }
+  },
+  methods : {
+    valid(event) {
+      this.country = event.target.value.trim();
+      if (this.country) {
+        axios.get("https://restcountries.eu/rest/v2/name/" + this.country).then((response) => {
+          this.data = response.data[0];
+        }).catch((response) => {
+          console.log(response);
+          this.data = { };
+          });
+      }
+      else this.data = { };
+    }
+  },
+  created() {},
+  components: {}
 }
 </script>
-
-<style>
-html, body {
-  height: 100%;
-  background: #F2F6FA;
-}
-
-#app {
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.container {
-  width: 100%;
-}
-
-.column--align-center {
-  margin: 0 auto;
-}
-
-.navigation-buttons {
-  position: absolute;
-  top: 5px;
-  width: 99%;
-  z-index: 99;
-}
-
-.navigation-buttons .button {
-  margin: 0 2px;
-}
-
-.navigation-buttons .button .fa {
-  padding-right: 5px;
-}
-</style>
+<style></style>
