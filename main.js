@@ -1,86 +1,61 @@
-const state = {
-  notes: [],
-  timestamps: []
-}
-
-const mutations = {
-  ADD_NOTE (state, payload) {
-    let newNote = payload;
-    state.notes.push(newNote);
-  },
-  ADD_TIMESTAMP (state, payload) {
-    let newTimeStamp = payload;
-    state.timestamps.push(newTimeStamp);
-  }
-}
-
-const actions = {
-  addNote (context, payload) {
-    context.commit('ADD_NOTE', payload);
-  },
-  addTimestamp (context, payload) {
-    context.commit('ADD_TIMESTAMP', payload);
-  }
-}
-
-const getters = {
-  getNotes: state => state.notes,
-  getTimestamps: state => state.timestamps,
-  getNoteCount: state => state.notes.length
-}
-
-const store = new Vuex.Store({
-  state,
-  mutations,
-  actions,
-  getters
-})
-
-const inputComponent = {
-  template: `<input
-      placeholder='Enter a note'
-      v-model="input"
-      @keyup.enter="monitorEnterKey"
-      class="input is-small" type="text" />`,
-  data () {
-    return {
-      input: '',
-    }
-  },
-  methods: {
-    monitorEnterKey () {
-      this.$store.dispatch('addNote', this.input);
-      this.$store.dispatch('addTimestamp', new Date().toLocaleString());
-      this.input = '';
-    }
-  }
-}
-
-const noteCountComponent = {
+const submissionComponent = {
   template:
-    `<div class="note-count">
-      Note count: <strong>{{ noteCount }}</strong>
+  ` <div style="display: flex; width: 100%">
+      <figure class="media-left">
+        <img class="image is-64x64"
+          :src="submission.submissionImage">
+      </figure>
+      <div class="media-content">
+        <div class="content">
+          <p>
+            <strong>
+              <a :href="submission.url" class="has-text-info">
+                {{ submission.title }}
+              </a>
+              <span class="tag is-small">#{{ submission.id }}</span>
+            </strong>
+            <br>
+              {{ submission.description }}
+            <br>
+            <small class="is-size-7">
+              Submitted by:
+              <img class="image is-24x24"
+                :src="submission.avatar">
+            </small>
+          </p>
+        </div>
+      </div>
+      <div class="media-right">
+        <span class="icon is-small" @click="upvote(submission.id)">
+          <i class="fa fa-chevron-up"></i>
+          <strong class="has-text-info">{{ submission.votes }}</strong>
+        </span>
+      </div>
     </div>`,
-  computed: {
-    noteCount() {
-      return this.$store.getters.getNoteCount;
+  props: ['submission', 'submissions'],
+  methods: {
+    upvote(submissionId) {
+      const submission = this.submissions.find(
+        submission => submission.id === submissionId
+      );
+      submission.votes++;
     }
   }
-}
+};
 
 new Vue({
   el: '#app',
-  store,
+  data: {
+    submissions: Seed.submissions
+  },
   computed: {
-    notes() {
-      return this.$store.getters.getNotes;
-    },
-    timestamps() {
-      return this.$store.getters.getTimestamps;
+    sortedSubmissions () {
+      return this.submissions.sort((a, b) => {
+        return b.votes - a.votes
+      });
     }
   },
   components: {
-    'input-component': inputComponent,
-    'note-count-component': noteCountComponent
+    'submission-component': submissionComponent
   }
-})
+});

@@ -3,34 +3,25 @@
 
 <head>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.5.3/css/bulma.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.6/css/all.css">
   <link rel="stylesheet" href="./public/styles.css" />
-  <title>Vuex: Note-taking</title>
 </head>
 
 <body>
   <div id="app">
-    <div class="notes-section">
-      <div class="columns">
-        <div class="column has-text-centered">
-          <strong>Notes</strong>
-          <div v-for="note in notes" class="notes">
-            {{ note }}
-          </div>
-        </div>
-        <div class="column has-text-centered">
-          <strong>Timestamp</strong>
-          <div v-for="timestamp in timestamps" class="timestamps">
-            {{ timestamp }}
-          </div>
-        </div>
-      </div>
-      <input-component></input-component>
+    <h2 class="title has-text-centered dividing-header">UpVote!</h2>
+
+    <div class="section">
+      <article v-for="submission in sortedSubmissions" :key="submission.id" class="media"
+        :class="{ 'blue-border': submission.votes >= 20 }">
+        <submission-component :submission="submission" :submissions="sortedSubmissions">
+        </submission-component>
+      </article>
     </div>
-    <note-count-component></note-count-component>
   </div>
 
   <script src="https://unpkg.com/vue"></script>
-  <script src="https://unpkg.com/vuex"></script>
+  <script src="./seed.js"></script>
   <script src="./main.js"></script>
 </body>
 
