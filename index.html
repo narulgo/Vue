@@ -2,22 +2,15 @@
 <html>
 
 <head>
-    <title>App</title>
+    <title>Hello</title>
     <meta charset='UTF-8' />
     <script src='https://cdn.jsdelivr.net/npm/vue/dist/vue.js'></script>
-    <link rel='stylesheet' type='text/css' href='./styles.css' media='screen' />
 </head>
 
 <body>
     <div id='app'>
-        <button v-on:click='rotate'>
-            Rotate
-        </button>
-        <transition name='fade' mode='out-in'>
-            <p v-bind:key='state'>
-                {{ state }}
-            </p>
-        </transition>
+        <p>{{message}}</p>
+        <p>{{spelledMessage}}</p>
     </div>
     <script src='./index.js'></script>
 </body>
