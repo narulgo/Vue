@@ -1,12 +1,26 @@
-const INCREASE = 'increase';
-
 const store = new Vuex.Store({
     state: {
-        count: 0
+        count1: 0,
+        count2: 0
     },
     mutations: {
-        [INCREASE](state, payload) {
-            state.count += payload.amount;
+        increase(state, payload) {
+            state.count1 += payload.amount;
+        },
+        decrease(state, payload) {
+            state.count2 -= payload.amount;
+        }
+    },
+    actions: {
+        async increaseAsync({ commit }, payload) {
+            return Promise.resolve(commit('increase', payload));
+        },
+        async decreaseAsync({ commit }, payload) {
+            return Promise.resolve(commit('decrease', payload));
+        },
+        async updateCounts({ dispatch }, payload) {
+            await dispatch('increaseAsync', payload);
+            await dispatch('decreaseAsync', payload);
         }
     }
 });
@@ -14,10 +28,10 @@ const store = new Vuex.Store({
 new Vue({
     el: '#app',
     store,
-    computed: Vuex.mapState(['count']),
     methods: {
-        increase(amount) {
-            this.$store.commit(INCREASE, { amount });
-        }
+        ...Vuex.mapActions(['updateCounts'])
+    },
+    computed: {
+        ...Vuex.mapState(['count1', 'count2'])
     }
 });
