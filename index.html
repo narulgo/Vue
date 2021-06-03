@@ -5,14 +5,19 @@
     <title>App</title>
     <meta charset='UTF-8' />
     <script src='https://cdn.jsdelivr.net/npm/vue/dist/vue.js'></script>
+    <link rel='stylesheet' type='text/css' href='./styles.css' media='screen' />
 </head>
 
 <body>
     <div id='app'>
-        <button @click='addPerson'>Add Person</button>
-        <div v-for='(person, index) in persons'>
-            {{index}} - {{person}}
-        </div>
+        <button v-on:click='rotate'>
+            Rotate
+        </button>
+        <transition name='fade'>
+            <p v-bind:key='state'>
+                {{ state }}
+            </p>
+        </transition>
     </div>
     <script src='./index.js'></script>
 </body>

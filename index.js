@@ -1,12 +1,10 @@
 new Vue({
     el: '#app',
-    data: {
-        persons: ['Joe', 'Mary']
-    },
+    data: { states: ['foo', 'bar', 'baz'], state: '', index: 0 },
     methods: {
-        addPerson() {
-            this.persons.length = 5;
-            this.persons.splice(5, 1, 'Jane');
+        rotate() {
+            this.index = (this.index + 1) % this.states.length;
+            this.state = this.states[this.index];
         }
     }
 });
