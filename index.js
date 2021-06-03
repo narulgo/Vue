@@ -5,7 +5,8 @@ new Vue({
     },
     methods: {
         addPerson() {
-            this.$set(this.persons, 5, 'Jane');
+            this.persons.length = 5;
+            this.persons.splice(5, 1, 'Jane');
         }
     }
 });
