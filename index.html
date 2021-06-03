@@ -9,12 +9,12 @@
 
 <body>
     <div id='app'>
-        <button @click='filterPerson'>Filter Person</button>
-        <div v-for='person in persons'>
-            {{person.name}}
+        <button @click='addPerson'>Add Person</button>
+        <div v-for='(person, index) in persons'>
+            {{index}} - {{person}}
         </div>
     </div>
-    <script src='./mutation.js'></script>
+    <script src='./index.js'></script>
 </body>
 
 </html>
