@@ -1,46 +1,37 @@
-const User = {
+const store = new Vuex.Store({
+    state: {
+        count: 0
+    },
+    mutations: {
+        increase(state) {
+            state.count++;
+        }
+    }
+});
+
+Vue.component('counter', {
     data() {
         return {
-            user: {},
-            loading: true
+            localCount: 1
         };
-    },
-    async beforeRouteEnter(to, from, next) {
-        const user = await Promise.resolve({ id: to.params.id });
-        next(vm => vm.setUser(user));
-    },
-    async beforeRouteUpdate(to, from, next) {
-        const user = await Promise.resolve({ id: to.params.id });
-        this.setUser(user);
-        next();
-    },
-    methods: {
-        setUser(user) {
-            this.loading = true;
-            this.user = user;
-            this.loading = false;
-        }
     },
     template: `
     <div>
-      <div v-if='!loading'>user: {{user.id}}</div>
-      <div v-if='loading'>Loading</div>
+      <div>{{ count }}</div>
+      <div>{{ countAlias }}</div>
+      <div>{{ countPlusLocal }}</div>
     </div>
-  `
-};
-
-const routes = [
-    {
-        path: '/:id',
-        component: User
-    }
-];
-
-const router = new VueRouter({
-    routes
+  `,
+    computed: Vuex.mapState({
+        count: state => state.count,
+        countAlias: 'count',
+        countPlusLocal(state) {
+            return state.count + this.localCount;
+        }
+    })
 });
 
 new Vue({
     el: '#app',
-    router
+    store
 });
