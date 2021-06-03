@@ -1,11 +1,19 @@
-const vm = new Vue({
+new Vue({
     el: '#app',
     data: {
-        message: 'foo'
+        firstName: 'Joe',
+        lastName: 'Smith'
     },
     computed: {
-        spelledMessage() {
-            return this.message.split('').join('-');
+        name: {
+            get() {
+                return `${this.firstName} ${this.lastName}`;
+            },
+            set(newValue) {
+                const [firstName, lastName] = newValue.split(' ');
+                this.firstName = (firstName || '').trim();
+                this.lastName = (lastName || '').trim();
+            }
         }
     }
-}); console.log(vm.spelledMessage);
+});
