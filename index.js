@@ -1,13 +1,12 @@
+const INCREASE = 'increase';
+
 const store = new Vuex.Store({
     state: {
-        todos: [
-            { id: 1, text: 'todo1', done: true },
-            { id: 2, text: 'todo2', done: false }
-        ]
+        count: 0
     },
-    getters: {
-        getTodoById: state => id => {
-            return state.todos.find(todo => todo.id === id);
+    mutations: {
+        [INCREASE](state, payload) {
+            state.count += payload.amount;
         }
     }
 });
@@ -15,12 +14,10 @@ const store = new Vuex.Store({
 new Vue({
     el: '#app',
     store,
-    computed: Vuex.mapState({
-        todos: 'todos'
-    }),
+    computed: Vuex.mapState(['count']),
     methods: {
-        getTodoById(id) {
-            return this.$store.getters.getTodoById(id);
+        increase(amount) {
+            this.$store.commit(INCREASE, { amount });
         }
     }
 });
