@@ -10,9 +10,10 @@
 
 <body>
     <div id='app'>
-        <button @click='updateCounts({amount: 10})'>Update Counts</button>
-        <p>Count 1: {{count1}}</p>
-        <p>Count 2: {{count2}}</p>
+        <button @click='increaseA({amount: 10})'>Increase</button>
+        <button @click='increaseB({amount: 10})'>Increase</button>
+        <p>A Count: {{a.count}}</p>
+        <p>B Count: {{b.count}}</p>
     </div>
     <script src='index.js'></script>
 </body>

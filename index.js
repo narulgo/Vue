@@ -1,37 +1,59 @@
-const store = new Vuex.Store({
+const moduleA = {
+    namespaced: true,
     state: {
-        count1: 0,
-        count2: 0
+        count: 0
     },
     mutations: {
         increase(state, payload) {
-            state.count1 += payload.amount;
-        },
-        decrease(state, payload) {
-            state.count2 -= payload.amount;
+            state.count += payload.amount;
         }
     },
     actions: {
-        async increaseAsync({ commit }, payload) {
-            return Promise.resolve(commit('increase', payload));
-        },
-        async decreaseAsync({ commit }, payload) {
-            return Promise.resolve(commit('decrease', payload));
-        },
-        async updateCounts({ dispatch }, payload) {
-            await dispatch('increaseAsync', payload);
-            await dispatch('decreaseAsync', payload);
+        increase({ commit }, payload) {
+            commit('increase', payload);
         }
+    }
+};
+
+const moduleB = {
+    namespaced: true,
+    state: {
+        count: 1
+    },
+    mutations: {
+        increase(state, payload) {
+            state.count += payload.amount;
+        }
+    },
+    actions: {
+        increase({ commit }, payload) {
+            commit('increase', payload);
+        }
+    }
+};
+
+const store = new Vuex.Store({
+    modules: {
+        a: moduleA,
+        b: moduleB
     }
 });
 
 new Vue({
     el: '#app',
     store,
-    methods: {
-        ...Vuex.mapActions(['updateCounts'])
-    },
     computed: {
-        ...Vuex.mapState(['count1', 'count2'])
+        ...Vuex.mapState({
+            a: state => state.a,
+            b: state => state.b
+        })
+    },
+    methods: {
+        increaseA(payload) {
+            this.$store.dispatch('a/increase', payload);
+        },
+        increaseB(payload) {
+            this.$store.dispatch('b/increase', payload);
+        }
     }
 });
