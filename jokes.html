@@ -5,14 +5,15 @@
     <title>Hello</title>
     <meta charset='UTF-8' />
     <script src='https://cdn.jsdelivr.net/npm/vue/dist/vue.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js'></script>
 </head>
 
 <body>
     <div id='app'>
-        <p ref='foo'>{{foo}}</p>
-        <button @click='toggle'>Toggle</button>
+        <input type='text' v-model='message' />
+        <p>{{joke}}</p>
     </div>
-    <script src='./index.js'></script>
+    <script src='./jokes.js'></script>
 </body>
 
 </html>
