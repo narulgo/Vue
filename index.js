@@ -5,7 +5,7 @@ new Vue({
     },
     methods: {
         addPerson() {
-            Vue.set(this.persons, 5, 'Jane');
+            this.$set(this.persons, 5, 'Jane');
         }
     }
 });
