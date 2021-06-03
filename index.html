@@ -13,7 +13,7 @@
         <button v-on:click='rotate'>
             Rotate
         </button>
-        <transition name='fade'>
+        <transition name='fade' mode='out-in'>
             <p v-bind:key='state'>
                 {{ state }}
             </p>
