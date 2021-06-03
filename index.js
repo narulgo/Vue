@@ -1,37 +1,26 @@
 const store = new Vuex.Store({
     state: {
-        count: 0
+        todos: [
+            { id: 1, text: 'todo1', done: true },
+            { id: 2, text: 'todo2', done: false }
+        ]
     },
-    mutations: {
-        increase(state) {
-            state.count++;
+    getters: {
+        getTodoById: state => id => {
+            return state.todos.find(todo => todo.id === id);
         }
     }
 });
 
-Vue.component('counter', {
-    data() {
-        return {
-            localCount: 1
-        };
-    },
-    template: `
-    <div>
-      <div>{{ count }}</div>
-      <div>{{ countAlias }}</div>
-      <div>{{ countPlusLocal }}</div>
-    </div>
-  `,
-    computed: Vuex.mapState({
-        count: state => state.count,
-        countAlias: 'count',
-        countPlusLocal(state) {
-            return state.count + this.localCount;
-        }
-    })
-});
-
 new Vue({
     el: '#app',
-    store
+    store,
+    computed: Vuex.mapState({
+        todos: 'todos'
+    }),
+    methods: {
+        getTodoById(id) {
+            return this.$store.getters.getTodoById(id);
+        }
+    }
 });
