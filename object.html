@@ -9,11 +9,11 @@
 
 <body>
     <div id='app'>
-        <div v-for='person of persons'>
-            {{person.name}}
+        <div v-for='(value, key, index) in book'>
+            {{index}}: {{key}} - {{value}}
         </div>
     </div>
-    <script src='./index.js'></script>
+    <script src='./object.js'></script>
 </body>
 
 </html>
